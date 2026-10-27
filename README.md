@@ -1,7 +1,9 @@
 # 🎉 Holiday Hangout Planner
 
 > Built for **API Blitz 2026** — *Three APIs. One product. One database. One winner.*  
-> Organized by the **Microsoft Student Technical Club (MSTC)**, Dhirubhai Ambani University (DAU).
+> Organized by the **Microsoft Student Technical Club (MSTC)**, Dhirubhai Ambani University (DAU).  
+> 
+> 🌐 **Live Vercel Application:** [https://holiday-hangout-planner.vercel.app](https://holiday-hangout-planner.vercel.app)
 
 Holiday Hangout Planner turns public holidays into memorable experiences with friends. It connects national holiday calendars with activity recommendations and generates instant QR codes so hangout plans can be shared and scanned effortlessly.
 
@@ -121,16 +123,11 @@ API Blitz/
 
 ---
 
-## ☁️ Deployment Guide
+## ☁️ Deployment & Live Application
 
-The application is structured as a self-contained Node.js Express service, making it ready to deploy on any cloud platform:
-
-- **Render / Railway / Fly.io:**
-  - Build command: `npm install`
-  - Start command: `npm start`
-  - Set environment variable `DATABASE_URL` with your Neon PostgreSQL connection string.
-- **Vercel:**
-  - Can be deployed with standard Node.js runtime configuration.
+- 🌐 **Live Vercel Link:** [https://holiday-hangout-planner.vercel.app](https://holiday-hangout-planner.vercel.app)
+- **Deployment Platform:** Vercel (Production Build)
+- **Alternative Cloud Deployments:** Render / Railway / Fly.io supported out of the box with standard `npm install` and `npm start`.
 
 ---
 
@@ -145,6 +142,7 @@ The application is structured as a self-contained Node.js Express service, makin
 
 ## 📜 Event Compliance & Submission Checklist
 
+- [x] **Live Deployed Application:** Deployed and publicly accessible at [https://holiday-hangout-planner.vercel.app](https://holiday-hangout-planner.vercel.app).
 - [x] **Three Assigned APIs:** Nager.Date API, Bored API, and goQR API are all integrated meaningfully.
 - [x] **Unassigned APIs Excluded:** Pantry API and QuickChart API are not used in this build.
 - [x] **Database Requirement:** Full Neon PostgreSQL schema, connection pooling, and UI diagnostic badge implemented.
