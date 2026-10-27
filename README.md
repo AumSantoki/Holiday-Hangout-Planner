@@ -40,12 +40,11 @@ As required by the **API Blitz Rulebook**, this application integrates with **Ne
 
 ## 🚀 Core User Flow
 
-1. **Select Country & Year:** Choose a featured or global country (e.g., India, US, UK, Canada, Australia) and event year (2026/2025/2027).
-2. **Browse Public Holidays:** The app queries Nager.Date API and displays the full calendar of public holidays with badges and dates.
-3. **Plan My Day:** Select any holiday and click "Plan my day with Bored API."
-4. **Generate Hangout Activity:** Bored API suggests an activity (e.g. *Host a game night*, *Explore a local park*). Customize category (Social, Recreational, Music, Cooking), specify group size, or hit **🎲 Re-roll Activity** for fresh suggestions.
-5. **Generate QR & Share:** The app saves the hangout plan to Neon PostgreSQL and calls goQR API to generate a QR code.
-6. **Scan & RSVP:** Friends scan the QR code with their mobile phone cameras to open the dedicated invitation page and click **"Count Me In! 🎊"**.
+1. **Find Holidays:** Choose a featured or global country (e.g., India, United States, United Kingdom, Canada, Australia) and calendar year to explore upcoming public holidays.
+2. **Choose a Holiday:** Select a holiday card to anchor your celebration.
+3. **Suggest an Activity:** Click "Plan my day" to receive curated hangout ideas. Customize the vibe (Social, Recreational, Music, Cooking, Relaxation), adjust your group size, or hit **🎲 Re-roll Activity** for fresh suggestions.
+4. **Share Your Plan:** Generate a scannable QR code and shareable invitation URL with optional meeting notes.
+5. **Scan & RSVP:** Friends scan the QR code using any mobile camera to view the dedicated invitation and click **"Count Me In! 🎊"**.
 
 ---
 

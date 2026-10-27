@@ -194,7 +194,7 @@ export function getDbStatus() {
   return {
     isConfigured: Boolean(process.env.DATABASE_URL),
     isConnected: dbConnected,
-    provider: dbConnected ? 'Neon PostgreSQL' : (process.env.DATABASE_URL ? 'Neon (Connection Issue)' : 'In-Memory (Neon Ready)'),
+    provider: dbConnected ? 'PostgreSQL Database' : (process.env.DATABASE_URL ? 'Database (Connecting)' : 'In-Memory Store (Cloud Ready)'),
     error: dbError,
     cachedPlansCount: memoryStore.size
   };

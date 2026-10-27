@@ -1,5 +1,5 @@
 // Holiday Hangout Planner - Client Application
-// API Blitz 2026 (DAIICT / DAU)
+// Polished Light Theme & Clean User Experience
 
 document.addEventListener('DOMContentLoaded', () => {
   // Application State
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const rsvpBtn = document.getElementById('rsvpBtn');
   const rsvpSuccessMsg = document.getElementById('rsvpSuccessMsg');
 
-  // Neon DB Modal Elements
+  // Database Modal Elements
   const dbStatusBtn = document.getElementById('dbStatusBtn');
   const dbStatusDot = document.getElementById('dbStatusDot');
   const dbStatusText = document.getElementById('dbStatusText');
@@ -123,20 +123,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (res.ok) {
         const data = await res.json();
         modalDbProvider.textContent = data.provider;
-        modalDbConnected.textContent = data.isConnected ? 'Connected (Active)' : 'Ready (Fallback Active)';
+        modalDbConnected.textContent = data.isConnected ? 'Connected (Active)' : 'Ready (Storage Active)';
 
         if (data.isConnected) {
           dbStatusDot.className = 'status-dot';
           modalDbDot.className = 'status-dot';
-          dbStatusText.textContent = 'Neon DB (Active)';
+          dbStatusText.textContent = 'Database Active';
         } else {
           dbStatusDot.className = 'status-dot amber';
           modalDbDot.className = 'status-dot amber';
-          dbStatusText.textContent = data.isConfigured ? 'Neon (Connecting)' : 'Neon Ready';
+          dbStatusText.textContent = data.isConfigured ? 'Connecting...' : 'Storage Ready';
         }
       }
     } catch (e) {
-      console.warn('DB status check error:', e);
+      console.warn('Database status check error:', e);
     }
   }
 
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (json.success && Array.isArray(json.data)) {
         state.countries = json.data;
 
-        // Pinned popular countries for quick access
+        // Featured popular countries for fast selection
         const pinnedCodes = ['IN', 'US', 'GB', 'CA', 'AU', 'DE', 'FR', 'JP', 'SG', 'BR'];
         const pinned = [];
         const others = [];
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Fetch Public Holidays (Nager.Date API)
+  // Fetch Public Holidays
   async function fetchHolidays() {
     const countryCode = countrySelect.value;
     const year = yearSelect.value;
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     holidayGridContainer.style.display = 'none';
     holidaysStateBox.style.display = 'flex';
-    holidaysStateText.textContent = `Fetching public holidays for ${countryName} (${year}) from Nager.Date API...`;
+    holidaysStateText.textContent = `Finding public holidays for ${countryName} (${year})...`;
 
     try {
       const res = await fetch(`/api/holidays?country=${encodeURIComponent(countryCode)}&year=${encodeURIComponent(year)}`);
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         holidaysStateBox.style.display = 'flex';
         holidaysStateBox.innerHTML = `
           <div class="empty-icon">📅</div>
-          <p style="color: var(--text-muted);">No public holidays found for ${countryName} in ${year}. Try choosing another country or year.</p>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">No public holidays found for ${countryName} in ${year}. Try choosing another country or year.</p>
         `;
         return;
       }
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
       holidaysStateBox.style.display = 'flex';
       holidaysStateBox.innerHTML = `
         <div class="empty-icon">⚠️</div>
-        <p style="color: var(--accent-rose);">Could not connect to Nager.Date API. Please check your network or try again.</p>
+        <p style="color: var(--accent-rose); font-size: 0.95rem;">Could not retrieve holidays. Please check your network or try again.</p>
       `;
     }
   }
@@ -292,10 +292,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Fetch Activity Suggestion (Bored API)
+  // Fetch Activity Suggestion
   async function fetchActivity(showSpinner = true) {
     if (showSpinner) {
-      activityText.innerHTML = '<span style="color: var(--text-muted); font-size: 1.1rem;">🎲 Asking Bored API for an awesome hangout plan...</span>';
+      activityText.innerHTML = '<span style="color: var(--text-dim); font-size: 1.15rem; font-weight: 600;">✨ Discovering a fun hangout activity...</span>';
       rerollActivityBtn.disabled = true;
     }
 
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     metaAccessibility.textContent = data.accessibility || 'Standard';
   }
 
-  // Save Plan & Generate QR Code (goQR API + Neon DB)
+  // Save Plan & Generate QR Code
   async function saveAndSharePlan() {
     if (!state.selectedHoliday || !state.currentActivity) {
       alert('Please select a holiday and activity first.');
@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveAndShareBtn.disabled = true;
-    saveAndShareBtn.innerHTML = '<span>⏳ Saving to Neon & Generating QR...</span>';
+    saveAndShareBtn.innerHTML = '<span>⏳ Saving plan & generating QR...</span>';
 
     const payload = {
       countryCode: state.selectedCountry.code,
@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
     previewPlanLink.href = shareUrl;
   }
 
-  // Load Recent Hangouts from Neon / Memory Store
+  // Load Recent Hangouts
   async function loadRecentPlans() {
     try {
       const res = await fetch('/api/plans');
@@ -446,17 +446,17 @@ document.addEventListener('DOMContentLoaded', () => {
           const item = document.createElement('div');
           item.className = 'recent-plan-item';
           item.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.4rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem;">
               <span class="holiday-date-badge">${plan.holidayDate}</span>
               <span class="holiday-type-tag">${plan.countryName || plan.countryCode}</span>
             </div>
-            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; color: #ffffff;">${plan.holidayName}</div>
-            <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.6rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+            <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; color: var(--text-main);">${plan.holidayName}</div>
+            <div style="font-size: 0.86rem; color: var(--text-muted); margin-bottom: 0.75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4;">
               ${plan.activity}
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.5rem; font-size: 0.75rem;">
-              <span style="color: var(--accent-sky);">👥 ${plan.participants} people</span>
-              <a href="/?planId=${plan.id}" class="btn btn-secondary btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.72rem;">View Plan ➔</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 0.65rem; font-size: 0.78rem;">
+              <span style="color: var(--primary); font-weight: 600;">👥 ${plan.participants} people</span>
+              <a href="/?planId=${plan.id}" class="btn btn-secondary btn-sm" style="padding: 0.25rem 0.65rem; font-size: 0.76rem;">View Plan ➔</a>
             </div>
           `;
           recentPlansContainer.appendChild(item);
