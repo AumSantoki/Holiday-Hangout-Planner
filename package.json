@@ -1,0 +1,27 @@
+{
+  "name": "holiday-hangout-planner",
+  "version": "1.0.0",
+  "description": "Holiday Hangout Planner - Built for API Blitz 2026 combining Nager.Date, Bored API, goQR API, and Neon Serverless Postgres",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "api-blitz",
+    "nager-date",
+    "bored-api",
+    "goqr",
+    "neon-postgres",
+    "holiday-planner"
+  ],
+  "author": "API Blitz Squad",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pg": "^8.13.3"
+  }
+}

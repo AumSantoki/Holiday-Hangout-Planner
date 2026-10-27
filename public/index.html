@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holiday Hangout Planner | API Blitz 2026</title>
+  <meta name="description" content="Turn public holidays into unforgettable memories with curated hangout activities and instant QR sharing. Built for API Blitz 2026.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="container header-inner">
+      <a href="/" class="logo-group" id="navLogo">
+        <div class="logo-icon">🎉</div>
+        <div class="logo-text">
+          <h1>Holiday Hangout Planner</h1>
+        </div>
+        <span class="logo-badge">API BLITZ · DAU</span>
+      </a>
+
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div class="status-pill" title="Nager.Date API v3 for public holiday data">
+          <span class="status-dot"></span>
+          <span>Nager.Date</span>
+        </div>
+        <div class="status-pill" title="Bored API for curated hangout activity suggestions">
+          <span class="status-dot"></span>
+          <span>Bored API</span>
+        </div>
+        <div class="status-pill" title="goQR API for dynamic QR code generation">
+          <span class="status-dot"></span>
+          <span>goQR API</span>
+        </div>
+        <div class="status-pill" id="dbStatusBtn" title="Click to view Neon Database integration details">
+          <span class="status-dot" id="dbStatusDot"></span>
+          <span id="dbStatusText">Neon DB</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Header -->
+  <section class="hero" id="heroSection">
+    <div class="container">
+      <div class="hero-tag">⚡ API BLITZ EVENT CHALLENGE 2026</div>
+      <h2>Never Spend a Holiday <span class="hero-gradient">Wondering What To Do</span></h2>
+      <p>Discover national holidays worldwide, generate the perfect activity with friends, and share your hangout with an instant scan-and-go QR code.</p>
+    </div>
+  </section>
+
+  <!-- Main Content Flow -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- View A: Standard Planner Flow -->
+      <div id="plannerView">
+        
+        <!-- Step Indicators -->
+        <div class="flow-steps">
+          <div class="flow-step-item active" id="stepIndicator1">
+            <div class="step-num">1</div>
+            <div>
+              <div style="font-weight: 600;">Choose Holiday</div>
+              <div style="font-size: 0.72rem; color: var(--text-dim);">Country & calendar dates</div>
+            </div>
+          </div>
+          <div class="flow-step-item" id="stepIndicator2">
+            <div class="step-num">2</div>
+            <div>
+              <div style="font-weight: 600;">Plan Activity</div>
+              <div style="font-size: 0.72rem; color: var(--text-dim);">Bored API ideas & crew size</div>
+            </div>
+          </div>
+          <div class="flow-step-item" id="stepIndicator3">
+            <div class="step-num">3</div>
+            <div>
+              <div style="font-weight: 600;">Share & QR Code</div>
+              <div style="font-size: 0.72rem; color: var(--text-dim);">goQR scan & Neon storage</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: Country & Holiday Selection -->
+        <section class="glass-card" id="holidaySelectionCard">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h3>1. Select Country & Public Holiday</h3>
+            </div>
+            <span class="api-source-tag">📡 Powered by Nager.Date API</span>
+          </div>
+
+          <div class="filter-grid">
+            <div class="form-group">
+              <label class="form-label" for="countrySelect">Select Country</label>
+              <select id="countrySelect" class="form-select">
+                <option value="" disabled selected>Loading countries...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="yearSelect">Year</label>
+              <select id="yearSelect" class="form-select">
+                <option value="2026" selected>2026 (Current Event Year)</option>
+                <option value="2025">2025</option>
+                <option value="2027">2027</option>
+              </select>
+            </div>
+            <button id="fetchHolidaysBtn" class="btn btn-primary">
+              <span>Find Holidays</span>
+            </button>
+          </div>
+
+          <!-- Holidays Loading & Error State -->
+          <div id="holidaysStateBox" class="state-box" style="display: none;">
+            <div class="spinner"></div>
+            <p id="holidaysStateText" style="color: var(--text-muted); font-size: 0.9rem;">Fetching public holidays from Nager.Date API...</p>
+          </div>
+
+          <!-- Holiday Results Grid -->
+          <div id="holidayGridContainer" style="display: none; margin-top: 1.5rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <span id="holidayCountLabel" style="font-size: 0.82rem; color: var(--text-muted); font-family: ui-monospace, monospace;"></span>
+              <span style="font-size: 0.8rem; color: var(--accent-sky);">Click a holiday to select</span>
+            </div>
+            <div id="holidayGrid" class="holiday-grid"></div>
+
+            <!-- Proceed to Plan Button -->
+            <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
+              <button id="planDayBtn" class="btn btn-primary" disabled>
+                <span>Plan my day with Bored API</span>
+                <span>➔</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Hangout Activity Engine (Bored API) -->
+        <section class="glass-card" id="activityCardSection" style="display: none;">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h3>2. Holiday Hangout Activity</h3>
+            </div>
+            <span class="api-source-tag">🎲 Powered by Bored API</span>
+          </div>
+
+          <!-- Selected Holiday Banner -->
+          <div id="selectedHolidayBanner" style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.25); border-radius: var(--radius-md); padding: 0.9rem 1.2rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+              <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-sky); font-weight: 600;">Selected Holiday</div>
+              <div id="bannerHolidayName" style="font-size: 1.15rem; font-weight: 700;">-</div>
+            </div>
+            <div id="bannerHolidayDate" style="font-size: 0.9rem; font-family: ui-monospace, monospace; color: var(--text-muted);">-</div>
+          </div>
+
+          <!-- Activity Display Box -->
+          <div class="activity-card" id="activityDisplayBox">
+            <div class="activity-badge-group">
+              <span class="activity-badge" id="badgeType">🏷️ Social</span>
+              <span class="activity-badge" id="badgeParticipants">👥 2-4 People</span>
+              <span class="activity-badge" id="badgePrice">💰 Low Cost</span>
+              <span class="activity-badge" id="badgeAccessibility">♿ Accessible</span>
+            </div>
+
+            <div id="activityText" class="activity-text">
+              Invite friends over for a game night and potluck feast
+            </div>
+
+            <div class="activity-meta-grid">
+              <div class="meta-item">
+                <span class="meta-label">Category</span>
+                <span class="meta-val" id="metaType">-</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Ideal Crew</span>
+                <span class="meta-val" id="metaParticipants">-</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Budget</span>
+                <span class="meta-val" id="metaPrice">-</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Accessibility</span>
+                <span class="meta-val" id="metaAccessibility">-</span>
+              </div>
+            </div>
+
+            <!-- Activity Customization Controls -->
+            <div class="activity-controls-row">
+              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                <div class="form-group" style="min-width: 140px;">
+                  <label class="form-label" for="activityTypeFilter">Vibe / Category</label>
+                  <select id="activityTypeFilter" class="form-select" style="padding: 0.45rem 0.7rem; font-size: 0.85rem;">
+                    <option value="all">Any Category</option>
+                    <option value="social" selected>Social</option>
+                    <option value="recreational">Recreational</option>
+                    <option value="cooking">Cooking / Food</option>
+                    <option value="music">Music</option>
+                    <option value="diy">DIY / Creative</option>
+                    <option value="relaxation">Relaxation</option>
+                    <option value="education">Educational</option>
+                    <option value="charity">Community & Charity</option>
+                  </select>
+                </div>
+                <div class="form-group" style="min-width: 110px;">
+                  <label class="form-label" for="participantFilter">Participants</label>
+                  <select id="participantFilter" class="form-select" style="padding: 0.45rem 0.7rem; font-size: 0.85rem;">
+                    <option value="">Any Size</option>
+                    <option value="1">Solo (1)</option>
+                    <option value="2">Pair (2)</option>
+                    <option value="4" selected>Squad (4)</option>
+                    <option value="5">Party (5+)</option>
+                  </select>
+                </div>
+              </div>
+
+              <button id="rerollActivityBtn" class="btn btn-secondary">
+                <span>🎲 Re-roll Activity</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Custom Notes & Next Action -->
+          <div style="margin-top: 1.5rem;">
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+              <label class="form-label" for="planNotesInput">Hangout Notes or Meeting Spot (Optional)</label>
+              <input type="text" id="planNotesInput" class="form-input" placeholder="e.g., Meet at Central Park at 4:00 PM, bring board games!">
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+              <button id="saveAndShareBtn" class="btn btn-accent">
+                <span>✨ Generate QR Code & Share Plan</span>
+                <span>➔</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3: Share Plan & QR Code (goQR API + Neon) -->
+        <section class="glass-card" id="shareCardSection" style="display: none;">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h3>3. Share Your Holiday Hangout</h3>
+            </div>
+            <span class="api-source-tag">📱 Powered by goQR API + Neon DB</span>
+          </div>
+
+          <div class="qr-share-container">
+            <!-- QR Code Display Box -->
+            <div class="qr-box">
+              <img id="qrCodeImage" src="" alt="Hangout QR Code" class="qr-image">
+              <div class="qr-caption">Scan with any phone camera to open plan</div>
+            </div>
+
+            <!-- Share Links and Details -->
+            <div class="share-details">
+              <div>
+                <span class="hero-tag" style="margin-bottom: 0.5rem;">Ready to Invite Friends</span>
+                <h4 id="sharePlanHeading" style="font-size: 1.35rem; font-weight: 700; color: #ffffff; margin-bottom: 0.25rem;">-</h4>
+                <p id="sharePlanSubtext" style="color: var(--text-muted); font-size: 0.9rem;">-</p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Shareable Plan URL</label>
+                <div class="share-link-input-group">
+                  <input type="text" id="shareUrlInput" class="share-link-input" readonly>
+                  <button id="copyShareUrlBtn" class="btn btn-secondary">
+                    <span>📋 Copy</span>
+                  </button>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button id="downloadQrBtn" class="btn btn-secondary btn-sm">
+                  <span>📥 Download QR Code</span>
+                </button>
+                <a id="previewPlanLink" href="#" target="_blank" class="btn btn-primary btn-sm">
+                  <span>👀 Open Shared Invite Page</span>
+                </a>
+                <button id="planAnotherBtn" class="btn btn-secondary btn-sm">
+                  <span>🔄 Plan Another Hangout</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Inspiration Wall: Recent Hangouts -->
+        <section class="glass-card" style="margin-top: 2rem;">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h3>🎉 Community Hangout Inspiration</h3>
+            </div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Saved plans from Neon DB</span>
+          </div>
+
+          <div id="recentPlansContainer" class="recent-plans-grid">
+            <div style="grid-column: 1 / -1; text-align: center; padding: 1.5rem; color: var(--text-dim);">
+              No community hangouts yet. Plan the first one above!
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- View B: Shared Invitation Page (Scan View / Deep Link) -->
+      <div id="sharedInviteView" style="display: none;">
+        <div class="shared-view-card">
+          <div class="invite-badge">🎉 YOU'RE INVITED TO A HANGOUT</div>
+          <div id="sharedCountryBadge" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">-</div>
+          <h2 id="sharedHolidayTitle" class="shared-holiday-name">-</h2>
+          <div id="sharedHolidayDate" class="shared-holiday-date">-</div>
+
+          <div class="shared-activity-callout">
+            <h4>Planned Hangout Activity</h4>
+            <div id="sharedActivityTitle" class="shared-activity-title">-</div>
+            <div id="sharedMetaRow" style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap;">
+              <span class="activity-badge" id="sharedTypeBadge">Social</span>
+              <span class="activity-badge" id="sharedParticipantsBadge">4 People</span>
+            </div>
+            <div id="sharedNotesBox" style="margin-top: 1rem; font-size: 0.9rem; color: #cbd5e1; font-style: italic; display: none;"></div>
+          </div>
+
+          <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+            <button id="rsvpBtn" class="btn btn-primary" style="padding: 0.85rem 2rem; font-size: 1.05rem;">
+              <span>Count Me In! 🎊</span>
+            </button>
+            <a href="/" class="btn btn-secondary">
+              <span>Create Your Own Plan</span>
+            </a>
+          </div>
+
+          <div id="rsvpSuccessMsg" style="margin-top: 1rem; color: var(--accent-emerald); font-weight: 600; font-size: 0.95rem; display: none;">
+            Awesome! You've joined this holiday hangout! 🚀
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Database & Architecture Info Modal -->
+  <div id="dbModal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div class="status-dot" id="modalDbDot"></div>
+          <h3 style="font-size: 1.15rem; font-weight: 700;">Neon Database & Stack Status</h3>
+        </div>
+        <button id="closeModalBtn" class="modal-close-btn">&times;</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.88rem; color: var(--text-muted);">
+        <div style="background: rgba(3, 7, 18, 0.7); border-radius: var(--radius-md); padding: 1rem; border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+            <span style="font-weight: 600; color: var(--text-main);">Database Provider:</span>
+            <span id="modalDbProvider" style="color: var(--accent-sky); font-family: ui-monospace, monospace;">Checking...</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+            <span style="font-weight: 600; color: var(--text-main);">Neon Connection:</span>
+            <span id="modalDbConnected" style="font-family: ui-monospace, monospace;">Checking...</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="font-weight: 600; color: var(--text-main);">Schema Table:</span>
+            <span style="color: var(--accent-emerald); font-family: ui-monospace, monospace;">holiday_plans</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 style="color: var(--text-main); margin-bottom: 0.35rem; font-size: 0.9rem;">API Blitz Architecture:</h4>
+          <ul style="padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.3rem;">
+            <li><strong style="color: #ffffff;">Nager.Date API:</strong> Fetches global public holidays and metadata by country code and year.</li>
+            <li><strong style="color: #ffffff;">Bored API:</strong> Recommends dynamic hangout activities tailored by category and party size.</li>
+            <li><strong style="color: #ffffff;">goQR API:</strong> Encodes sharable invitation URLs into responsive QR codes for mobile scanning.</li>
+            <li><strong style="color: #ffffff;">Neon PostgreSQL:</strong> Persists hangout invitations, metadata, and enables community wall lookup.</li>
+          </ul>
+        </div>
+
+        <div style="font-size: 0.78rem; color: var(--text-dim); border-top: 1px solid var(--border-color); padding-top: 0.75rem;">
+          To connect your own Neon project, set <code>DATABASE_URL=postgresql://...</code> in <code>.env</code> and restart the server.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <span id="toastIcon">📋</span>
+    <span id="toastMsg">Link copied to clipboard!</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="container">
+      <div class="footer-apis">
+        <a href="https://date.nager.at" target="_blank" rel="noopener" class="footer-api-link">
+          <span>📅 Nager.Date API</span>
+        </a>
+        <a href="https://bored-api.appbrewery.com" target="_blank" rel="noopener" class="footer-api-link">
+          <span>🎲 Bored API</span>
+        </a>
+        <a href="https://goqr.me/api/" target="_blank" rel="noopener" class="footer-api-link">
+          <span>📱 goQR API</span>
+        </a>
+        <a href="https://neon.tech" target="_blank" rel="noopener" class="footer-api-link">
+          <span>🐘 Neon Database</span>
+        </a>
+      </div>
+      <div>
+        API Blitz 2026 · Microsoft Student Technical Club (MSTC), Dhirubhai Ambani University (DAU)
+      </div>
+    </div>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
